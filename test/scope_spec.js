@@ -240,7 +240,28 @@ describe('Scope', function () {
             }, function (newValue, oldValue, scope) {
                 scope.aCounter++;
             });
-            
+
+            scope.$digest();
+            expect(scope.aCounter).toBe(1);
+        });
+
+        it('catches exceptions in listener functions and continues', function () {
+            scope.aValue = 'abc';
+            scope.aCounter = 0;
+
+            scope.$watch(function (scope) {
+                return scope.aValue;
+            }, function (newValue, oldValue, scope) {
+                throw 'error';
+            });
+
+            scope.$watch(function (scope) {
+                return scope.aValue;
+
+            }, function (newValue, oldValue, scope) {
+                scope.aCounter++;
+            });
+
             scope.$digest();
             expect(scope.aCounter).toBe(1);
         });
