@@ -224,5 +224,25 @@ describe('Scope', function () {
             scope.$digest();
             expect(scope.counter).toBe(1);
         });
+
+        it('catches exceptions in watch functions and continues', function () {
+            scope.aValue = 'abc';
+            scope.aCounter = 0;
+            
+            scope.$watch(function (scope) {
+                throw 'error';
+            }, function (newValue, oldValue, scope) {
+            });
+
+            scope.$watch(function (scope) {
+                return scope.aValue;
+
+            }, function (newValue, oldValue, scope) {
+                scope.aCounter++;
+            });
+            
+            scope.$digest();
+            expect(scope.aCounter).toBe(1);
+        });
     });
 });
